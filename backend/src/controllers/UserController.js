@@ -35,16 +35,9 @@ class UserController {
     try {
       const { name, password, email, isAdmin } = req.body;
 
-      if (!req.user.isAdmin) {
-        return res.status(403).json({
-          msg: "Unauthorized: Only Admins can create users",
-        });
-      }
-
       // Check if the user exists
       let user = await User.findOne({ where: { email } });
       if (user) {
-        console.log(user);
         return res.status(400).json({ msg: "User already exists" });
       }
 
@@ -72,12 +65,6 @@ class UserController {
     try {
       const { id } = req.params;
       const { name, email, password, isAdmin, isActive } = req.body;
-
-      if (!req.user.isAdmin) {
-        return res.status(403).json({
-          msg: "Unauthorized: Only Admins can update users",
-        });
-      }
 
       const user = await User.findByPk(id);
       if (!user) {
@@ -115,12 +102,6 @@ class UserController {
   static async delete(req, res) {
     try {
       const { id } = req.params;
-
-      if (!req.user.isAdmin) {
-        return res.status(403).json({
-          msg: "Unauthorized: Only Admins can delete users",
-        });
-      }
 
       const user = await User.findByPk(id);
       if (!user) {
