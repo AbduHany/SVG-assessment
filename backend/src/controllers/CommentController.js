@@ -44,6 +44,16 @@ class CommentController {
 
   static async getByOrderId(req, res) {
     try {
+      const { orderId } = req.params;
+      const comments = await Comment.findAll({
+        where: { orderId },
+        include: [
+          { model: Order, as: "order" },
+          { model: User, as: "user" },
+        ],
+        order: [["created_at", "DESC"]],
+      });
+      return res.status(200).json(comments);
     } catch (err) {
       console.error(err);
       return res.status(500).json({ message: "Server error" });
@@ -52,6 +62,16 @@ class CommentController {
 
   static async getByUserId(req, res) {
     try {
+      const { userId } = req.params;
+      const comments = await Comment.findAll({
+        where: { userId },
+        include: [
+          { model: Order, as: "order" },
+          { model: User, as: "user" },
+        ],
+        order: [["created_at", "DESC"]],
+      });
+      return res.status(200).json(comments);
     } catch (err) {
       console.error(err);
       return res.status(500).json({ message: "Server error" });
