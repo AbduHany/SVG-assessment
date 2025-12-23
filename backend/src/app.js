@@ -4,6 +4,7 @@ const dbClient = require("./utils/db");
 
 // routers
 const authRouter = require("./routers/AuthRouter");
+const userRouter = require("./routers/UserRouter");
 const clientRouter = require("./routers/ClientRouter");
 const productRouter = require("./routers/ProductRouter");
 const permissionRouter = require("./routers/PermissionRouter");
@@ -24,6 +25,7 @@ async function createServer() {
   await dbClient.isAlive();
 
   app.use("/auth", authRouter);
+  app.use("/users", userRouter);
   app.use("/permissions", permissionRouter);
   app.use("/clients", clientRouter);
   app.use("/products", productRouter);

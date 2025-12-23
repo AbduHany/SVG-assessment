@@ -31,6 +31,36 @@ class UserController {
       return res.status(500).json({ message: "Server error" });
     }
   }
+
+  static async create(req, res) {
+    try {
+      const { name, email, password, isAdmin, isActive } = req.body;
+
+      const existingUser = await User.findOne({ where: { email } });
+      if (existingUser) {
+        return res.status(409).json({ message: "Email already exists" });
+      }
+
+      const userId = uuidv4();
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(password, salt);
+
+      const user = await User.create({
+        id: userId,
+        name,
+        email,
+        password: hashedPassword,
+        isAdmin,
+        isActive: isActive ?? true,
+      });
+
+      return res.status(201).json(user);
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ message: "Server error" });
+    }
+  }
+
   static async update(req, res) {
     try {
       const { id } = req.params;
