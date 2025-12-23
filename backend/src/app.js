@@ -32,6 +32,7 @@ async function createServer() {
   app.use("/clients", clientRouter);
   app.use("/products", productRouter);
   app.use("/orders", orderRouter);
+  app.use("/comments", commentRouter);
 
   app.get("/", (req, res) => {
     res.send("Server is running");
