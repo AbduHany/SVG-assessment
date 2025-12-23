@@ -36,6 +36,7 @@ class ProductController {
       const productId = uuidv4();
 
       const product = await Product.create({
+        id: productId,
         name,
         description,
         price,

@@ -5,6 +5,7 @@ const authenticate = require("../middlewares/AuthMiddleware");
 userRouter.use(authenticate);
 userRouter.get("/", UserController.getAll);
 userRouter.get("/:id", UserController.getById);
+userRouter.post("/", UserController.create);
 userRouter.put("/:id", UserController.update);
 userRouter.delete("/:id", UserController.delete);
 

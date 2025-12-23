@@ -33,30 +33,38 @@ class UserController {
 
   static async create(req, res) {
     try {
-      const { name, email, password, isAdmin, isActive } = req.body;
+      const { name, password, email, isAdmin } = req.body;
 
-      const existingUser = await User.findOne({ where: { email } });
-      if (existingUser) {
-        return res.status(409).json({ message: "Email already exists" });
+      if (!req.user.isAdmin) {
+        return res.status(403).json({
+          msg: "Unauthorized: Only Admins can create users",
+        });
+      }
+
+      // Check if the user exists
+      let user = await User.findOne({ where: { email } });
+      if (user) {
+        console.log(user);
+        return res.status(400).json({ msg: "User already exists" });
       }
 
       const userId = uuidv4();
+
+      // Create a new user instance
       const salt = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash(password, salt);
-
-      const user = await User.create({
+      user = await User.create({
         id: userId,
         name,
         email,
         password: hashedPassword,
-        isAdmin,
-        isActive: isActive ?? true,
+        isAdmin: isAdmin ?? false,
+        isActive: true,
       });
-
-      return res.status(201).json(user);
-    } catch (error) {
-      console.error(error);
-      return res.status(500).json({ message: "Server error" });
+      res.status(201).json({ msg: "User Created Successfuly" });
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send("Server error");
     }
   }
 

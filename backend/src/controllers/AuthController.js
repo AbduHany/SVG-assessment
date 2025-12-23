@@ -1,4 +1,3 @@
-const { v4: uuidv4 } = require("uuid");
 const bcrypt = require("bcryptjs");
 const dbClient = require("../utils/db");
 const jwt = require("jsonwebtoken");
@@ -15,7 +14,6 @@ class AuthController {
       if (!user) {
         return res.status(400).json({ msg: "Invalid credentials" });
       }
-      console.log(user.password);
       // Check password
       const isMatch = await bcrypt.compare(password, user.password);
       if (!isMatch) {

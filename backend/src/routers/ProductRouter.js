@@ -1,5 +1,5 @@
 const productRouter = require("express").Router();
-const ProductController = require("../controllers/ClientController");
+const ProductController = require("../controllers/ProductController");
 const authenticate = require("../middlewares/AuthMiddleware");
 const checkPermissions = require("../middlewares/PermissionsMiddleware");
 
