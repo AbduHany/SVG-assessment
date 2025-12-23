@@ -2,12 +2,27 @@ const dbClient = require("../utils/db");
 const Permission = dbClient.models.permission;
 
 class PermissionController {
+  static async getAll(req, res) {
+    try {
+      if (!req.user.isAdmin) {
+        return res.status(403).json({
+          msg: "Unauthorized: Only Admins can view all permissions",
+        });
+      }
+      const permissions = await Permission.findAll();
+      return res.status(200).json(permissions);
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ message: "Server error" });
+    }
+  }
+
   static async createOrUpdate(req, res) {
     try {
       const { userId, resource, canView, canCreate, canUpdate, canDelete } =
         req.body;
 
-      if (!req.user.role.isAdmin) {
+      if (!req.user.isAdmin) {
         return res.status(403).json({
           msg: "Unauthorized: Only Admins can create/update permissions",
         });
@@ -51,7 +66,7 @@ class PermissionController {
     try {
       const { userId, resource } = req.params;
 
-      if (!req.user.role.isAdmin) {
+      if (!req.user.isAdmin) {
         return res.status(403).json({
           msg: "Unauthorized: Only Admins can remove permissions",
         });

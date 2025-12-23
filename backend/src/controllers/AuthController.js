@@ -4,7 +4,6 @@ const dbClient = require("../utils/db");
 const jwt = require("jsonwebtoken");
 const getenv = require("getenv");
 const User = dbClient.models.user;
-const Role = dbClient.models.role;
 
 class AuthController {
   static async postLogin(req, res) {

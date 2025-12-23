@@ -3,7 +3,6 @@ const bcrypt = require("bcryptjs");
 const dbClient = require("../utils/db");
 
 const User = dbClient.models.user;
-const Role = dbClient.models.role;
 
 class UserController {
   static async getAll(req, res) {
@@ -64,9 +63,9 @@ class UserController {
   static async update(req, res) {
     try {
       const { id } = req.params;
-      const { name, email, password, roleName, isActive } = req.body;
+      const { name, email, password, isAdmin, isActive } = req.body;
 
-      if (!req.user.role.isAdmin) {
+      if (!req.user.isAdmin) {
         return res.status(403).json({
           msg: "Unauthorized: Only Admins can update users",
         });
@@ -84,23 +83,10 @@ class UserController {
         }
       }
 
-      const roleRecord = await Role.findOne({ where: { name: roleName } });
-      if (!roleRecord) {
-        return res.status(400).json({ msg: "Invalid role" });
-      }
-      const roleId = roleRecord.id;
-
-      if (roleId && roleId !== user.roleId) {
-        const role = await Role.findByPk(roleId);
-        if (!role) {
-          return res.status(400).json({ message: "Invalid role" });
-        }
-      }
-
       const updatedValues = {
         name: name ?? user.name,
         email: email ?? user.email,
-        roleId: roleId ?? user.roleId,
+        isAdmin: isAdmin ?? user.isAdmin,
         isActive: isActive ?? user.isActive,
       };
 
@@ -122,7 +108,7 @@ class UserController {
     try {
       const { id } = req.params;
 
-      if (!req.user.role.isAdmin) {
+      if (!req.user.isAdmin) {
         return res.status(403).json({
           msg: "Unauthorized: Only Admins can delete users",
         });

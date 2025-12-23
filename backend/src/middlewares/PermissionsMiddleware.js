@@ -1,7 +1,7 @@
 const checkPermission = (resource, action) => (req, res, next) => {
   const user = req.user;
 
-  if (user.role.isAdmin) {
+  if (user.isAdmin) {
     return next();
   }
 

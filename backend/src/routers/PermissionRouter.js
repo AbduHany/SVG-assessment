@@ -4,6 +4,7 @@ const authenticate = require("../middlewares/AuthMiddleware");
 
 permissionRouter.use(authenticate);
 
+permissionRouter.get("/", permissionController.getAll);
 permissionRouter.post("/add", permissionController.createOrUpdate);
 permissionRouter.delete(
   "/remove/:userId/:resource",
