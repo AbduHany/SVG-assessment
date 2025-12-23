@@ -8,6 +8,7 @@ function initModels(sequelize) {
   var order = require("./Order")(sequelize, DataTypes);
   var orderItem = require("./OrderItem")(sequelize, DataTypes);
   var payment = require("./Payment")(sequelize, DataTypes);
+  var comment = require("./Comment")(sequelize, DataTypes);
 
   user.hasMany(permission, {
     foreignKey: "userId",
@@ -43,6 +44,10 @@ function initModels(sequelize) {
     foreignKey: "orderId",
     as: "payments",
   });
+  order.hasMany(comment, {
+    foreignKey: "orderId",
+    as: "comments",
+  });
 
   orderItem.belongsTo(order, {
     foreignKey: "orderId",
@@ -58,6 +63,15 @@ function initModels(sequelize) {
     as: "order",
   });
 
+  comment.belongsTo(order, {
+    foreignKey: "orderId",
+    as: "order",
+  });
+  comment.belongsTo(user, {
+    foreignKey: "userId",
+    as: "user",
+  });
+
   return {
     user,
     client,
@@ -66,6 +80,7 @@ function initModels(sequelize) {
     order,
     orderItem,
     payment,
+    comment,
   };
 }
 

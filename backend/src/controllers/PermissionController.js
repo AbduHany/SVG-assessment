@@ -1,4 +1,6 @@
+const { where } = require("sequelize");
 const dbClient = require("../utils/db");
+const User = require("../models/User");
 const Permission = dbClient.models.permission;
 
 class PermissionController {
@@ -11,8 +13,40 @@ class PermissionController {
       }
       const permissions = await Permission.findAll();
       return res.status(200).json(permissions);
-    } catch (error) {
-      console.error(error);
+    } catch (err) {
+      console.error(err);
+      return res.status(500).json({ message: "Server error" });
+    }
+  }
+
+  static async getByUserId(req, res) {
+    try {
+      const { userId } = req.params;
+
+      if (!req.user.isAdmin) {
+        return res.status(403).json({
+          msg: "Unauthorized: Only Admins can view user permissions",
+        });
+      }
+
+      const user = await User.findOne({
+        where: {
+          id: userId,
+        },
+      });
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      const userPermissions = await Permission.findAll({
+        where: {
+          userId,
+        },
+      });
+
+      return res.status(200).json(userPermissions);
+    } catch (err) {
+      console.error(err);
       return res.status(500).json({ message: "Server error" });
     }
   }
@@ -32,6 +66,15 @@ class PermissionController {
         return res
           .status(400)
           .json({ message: "userId and resource are required" });
+      }
+
+      const user = await User.findOne({
+        where: {
+          id: userId,
+        },
+      });
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
       }
 
       const [permission, created] = await Permission.findOrCreate({

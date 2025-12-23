@@ -1,5 +1,3 @@
-const { DataTypes } = require("sequelize");
-
 module.exports = (sequelize, DataTypes) => {
   const OrderItem = sequelize.define(
     "OrderItem",
@@ -40,11 +38,6 @@ module.exports = (sequelize, DataTypes) => {
       tableName: "order_items",
       timestamps: true,
       underscored: true,
-      hooks: {
-        beforeSave: (orderItem) => {
-          orderItem.subtotal = orderItem.quantity * orderItem.price;
-        },
-      },
     }
   );
 

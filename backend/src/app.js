@@ -8,6 +8,8 @@ const userRouter = require("./routers/UserRouter");
 const clientRouter = require("./routers/ClientRouter");
 const productRouter = require("./routers/ProductRouter");
 const permissionRouter = require("./routers/PermissionRouter");
+const orderRouter = require("./routers/OrderRouter");
+const commentRouter = require("./routers/CommentRouter");
 
 async function createServer() {
   const app = express();
@@ -29,6 +31,7 @@ async function createServer() {
   app.use("/permissions", permissionRouter);
   app.use("/clients", clientRouter);
   app.use("/products", productRouter);
+  app.use("/orders", orderRouter);
 
   app.get("/", (req, res) => {
     res.send("Server is running");
