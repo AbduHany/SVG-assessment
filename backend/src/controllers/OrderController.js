@@ -93,8 +93,8 @@ class OrderController {
         order: [["createdAt", "DESC"]],
       });
       return res.status(200).json(orders);
-    } catch (error) {
-      console.error(error);
+    } catch (err) {
+      console.error(err);
       return res.status(500).json({ message: "Server error" });
     }
   }
@@ -120,8 +120,8 @@ class OrderController {
       }
 
       return res.status(200).json(order);
-    } catch (error) {
-      console.error(error);
+    } catch (err) {
+      console.error(err);
       return res.status(500).json({ message: "Server error" });
     }
   }
@@ -145,8 +145,8 @@ class OrderController {
       });
 
       return res.status(200).json(orders);
-    } catch (error) {
-      console.error(error);
+    } catch (err) {
+      console.error(err);
       return res.status(500).json({ message: "Server error" });
     }
   }
@@ -170,8 +170,8 @@ class OrderController {
       });
 
       return res.status(200).json(orders);
-    } catch (error) {
-      console.error(error);
+    } catch (err) {
+      console.error(err);
       return res.status(500).json({ message: "Server error" });
     }
   }
@@ -234,9 +234,9 @@ class OrderController {
       });
 
       return res.status(201).json(createdOrder);
-    } catch (error) {
+    } catch (err) {
       await transaction.rollback();
-      console.error(error);
+      console.error(err);
       return res.status(500).json({ message: "Server error" });
     }
   }
@@ -324,9 +324,9 @@ class OrderController {
       });
 
       return res.status(200).json(updatedOrder);
-    } catch (error) {
+    } catch (err) {
       await transaction.rollback();
-      console.error(error);
+      console.error(err);
       return res.status(500).json({ message: "Server error" });
     }
   }
@@ -347,9 +347,9 @@ class OrderController {
 
       await transaction.commit();
       return res.status(204).send();
-    } catch (error) {
+    } catch (err) {
       await transaction.rollback();
-      console.error(error);
+      console.error(err);
       return res.status(500).json({ message: "Server error" });
     }
   }

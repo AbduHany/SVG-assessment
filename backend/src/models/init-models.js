@@ -15,6 +15,7 @@ function initModels(sequelize) {
     as: "permissions",
   });
   user.hasMany(order, { foreignKey: "userId", as: "orders" });
+  user.hasMany(comment, { foreignKey: "userId", as: "comments" });
 
   permission.belongsTo(user, {
     foreignKey: "userId",

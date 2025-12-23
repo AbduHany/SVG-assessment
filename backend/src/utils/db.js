@@ -24,8 +24,8 @@ class DbClient {
       await this.sequelize.authenticate();
       console.debug("Connection has been established successfully.");
       return true;
-    } catch (error) {
-      console.debug("Unable to connect to the database:", error);
+    } catch (err) {
+      console.debug("Unable to connect to the database:", err);
       return false;
     }
   }

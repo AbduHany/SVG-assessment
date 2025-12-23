@@ -9,8 +9,8 @@ class ClientController {
         order: [["name", "ASC"]],
       });
       return res.status(200).json(clients);
-    } catch (error) {
-      console.error(error);
+    } catch (err) {
+      console.error(err);
       return res.status(500).json({ message: "Server error" });
     }
   }
@@ -23,8 +23,8 @@ class ClientController {
         return res.status(404).json({ message: "Client not found" });
       }
       return res.status(200).json(client);
-    } catch (error) {
-      console.error(error);
+    } catch (err) {
+      console.error(err);
       return res.status(500).json({ message: "Server error" });
     }
   }
@@ -44,8 +44,8 @@ class ClientController {
       });
 
       return res.status(201).json(client);
-    } catch (error) {
-      console.error(error);
+    } catch (err) {
+      console.error(err);
       return res.status(500).json({ message: "Server error" });
     }
   }
@@ -68,8 +68,8 @@ class ClientController {
       });
 
       return res.status(200).json(client);
-    } catch (error) {
-      console.error(error);
+    } catch (err) {
+      console.error(err);
       return res.status(500).json({ message: "Server error" });
     }
   }
@@ -84,8 +84,8 @@ class ClientController {
 
       await client.destroy();
       return res.status(204).send();
-    } catch (error) {
-      console.error(error);
+    } catch (err) {
+      console.error(err);
       return res.status(500).json({ message: "Server error" });
     }
   }

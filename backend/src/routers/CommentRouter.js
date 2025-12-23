@@ -15,6 +15,16 @@ commentRouter.get(
   checkPermissions("comments", "view"),
   CommentController.getById
 );
+commentRouter.get(
+  "/orders/:orderId",
+  checkPermissions("comments", "view"),
+  CommentController.getByOrderId
+);
+commentRouter.get(
+  "/users/:userId",
+  checkPermissions("comments", "view"),
+  CommentController.getByUserId
+);
 commentRouter.post(
   "/",
   checkPermissions("comments", "create"),

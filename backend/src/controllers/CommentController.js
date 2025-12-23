@@ -15,8 +15,8 @@ class CommentController {
         order: [["created_at", "DESC"]],
       });
       return res.status(200).json(comments);
-    } catch (error) {
-      console.error(error);
+    } catch (err) {
+      console.error(err);
       return res.status(500).json({ message: "Server error" });
     }
   }
@@ -36,8 +36,24 @@ class CommentController {
       }
 
       return res.status(200).json(comment);
-    } catch (error) {
-      console.error(error);
+    } catch (err) {
+      console.error(err);
+      return res.status(500).json({ message: "Server error" });
+    }
+  }
+
+  static async getByOrderId(req, res) {
+    try {
+    } catch (err) {
+      console.error(err);
+      return res.status(500).json({ message: "Server error" });
+    }
+  }
+
+  static async getByUserId(req, res) {
+    try {
+    } catch (err) {
+      console.error(err);
       return res.status(500).json({ message: "Server error" });
     }
   }
@@ -75,8 +91,8 @@ class CommentController {
       });
 
       return res.status(201).json(comment);
-    } catch (error) {
-      console.error(error);
+    } catch (err) {
+      console.error(err);
       return res.status(500).json({ message: "Server error" });
     }
   }
@@ -112,8 +128,8 @@ class CommentController {
       });
 
       return res.status(200).json(comment);
-    } catch (error) {
-      console.error(error);
+    } catch (err) {
+      console.error(err);
       return res.status(500).json({ message: "Server error" });
     }
   }
@@ -128,8 +144,8 @@ class CommentController {
 
       await comment.destroy();
       return res.status(204).send();
-    } catch (error) {
-      console.error(error);
+    } catch (err) {
+      console.error(err);
       return res.status(500).json({ message: "Server error" });
     }
   }

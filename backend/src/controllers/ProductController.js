@@ -9,8 +9,8 @@ class ProductController {
         order: [["name", "ASC"]],
       });
       return res.status(200).json(products);
-    } catch (error) {
-      console.error(error);
+    } catch (err) {
+      console.error(err);
       return res.status(500).json({ message: "Server error" });
     }
   }
@@ -23,8 +23,8 @@ class ProductController {
         return res.status(404).json({ message: "Product not found" });
       }
       return res.status(200).json(product);
-    } catch (error) {
-      console.error(error);
+    } catch (err) {
+      console.error(err);
       return res.status(500).json({ message: "Server error" });
     }
   }
@@ -45,8 +45,8 @@ class ProductController {
       });
 
       return res.status(201).json(product);
-    } catch (error) {
-      console.error(error);
+    } catch (err) {
+      console.error(err);
       return res.status(500).json({ message: "Server error" });
     }
   }
@@ -70,8 +70,8 @@ class ProductController {
       });
 
       return res.status(200).json(product);
-    } catch (error) {
-      console.error(error);
+    } catch (err) {
+      console.error(err);
       return res.status(500).json({ message: "Server error" });
     }
   }
@@ -86,8 +86,8 @@ class ProductController {
 
       await product.destroy();
       return res.status(204).send();
-    } catch (error) {
-      console.error(error);
+    } catch (err) {
+      console.error(err);
       return res.status(500).json({ message: "Server error" });
     }
   }

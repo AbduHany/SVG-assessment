@@ -11,8 +11,8 @@ class UserController {
         order: [["name", "ASC"]],
       });
       return res.status(200).json(users);
-    } catch (error) {
-      console.error(error);
+    } catch (err) {
+      console.error(err);
       return res.status(500).json({ message: "Server error" });
     }
   }
@@ -25,8 +25,8 @@ class UserController {
         return res.status(404).json({ message: "User not found" });
       }
       return res.status(200).json(user);
-    } catch (error) {
-      console.error(error);
+    } catch (err) {
+      console.error(err);
       return res.status(500).json({ message: "Server error" });
     }
   }
@@ -93,8 +93,8 @@ class UserController {
       await user.update(updatedValues);
 
       return res.status(200).json(user);
-    } catch (error) {
-      console.error(error);
+    } catch (err) {
+      console.error(err);
       return res.status(500).json({ message: "Server error" });
     }
   }
@@ -110,8 +110,8 @@ class UserController {
 
       await user.destroy();
       return res.status(204).send();
-    } catch (error) {
-      console.error(error);
+    } catch (err) {
+      console.error(err);
       return res.status(500).json({ message: "Server error" });
     }
   }
