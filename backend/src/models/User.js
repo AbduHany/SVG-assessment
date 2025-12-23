@@ -23,10 +23,10 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      roleId: {
-        type: DataTypes.UUID,
-        allowNull: false,
-        field: "role_id",
+      isAdmin: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+        field: "is_admin",
       },
       isActive: {
         type: DataTypes.BOOLEAN,

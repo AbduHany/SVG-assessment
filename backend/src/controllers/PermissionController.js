@@ -7,7 +7,7 @@ class PermissionController {
       const { userId, resource, canView, canCreate, canUpdate, canDelete } =
         req.body;
 
-      if (!req.user.isAdmin) {
+      if (!req.user.role.isAdmin) {
         return res.status(403).json({
           msg: "Unauthorized: Only Admins can create/update permissions",
         });
@@ -57,7 +57,6 @@ class PermissionController {
         });
       }
 
-      console.log(userId, resource);
       const permission = await Permission.findOne({
         where: { userId, resource },
       });

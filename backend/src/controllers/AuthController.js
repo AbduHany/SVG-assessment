@@ -44,41 +44,6 @@ class AuthController {
       res.status(500).send("Server error");
     }
   }
-  static async postRegister(req, res) {
-    const { name, password, email, roleName } = req.body;
-    // Check if the user exists
-    try {
-      let user = await User.findOne({ where: { email } });
-      if (user) {
-        console.log(user);
-        return res.status(400).json({ msg: "User already exists" });
-      }
-
-      // Check for role
-      const roleRecord = await Role.findOne({ where: { name: roleName } });
-      if (!roleRecord) {
-        return res.status(400).json({ msg: "Invalid role" });
-      }
-      const roleId = roleRecord.id;
-      const userId = uuidv4();
-
-      // Create a new user instance
-      const salt = await bcrypt.genSalt(10);
-      const hashedPassword = await bcrypt.hash(password, salt);
-      user = await User.create({
-        id: userId,
-        name,
-        email,
-        password: hashedPassword,
-        roleId,
-        isActive: true,
-      });
-      res.status(201).json({ msg: "User Created Successfuly" });
-    } catch (err) {
-      console.error(err.message);
-      res.status(500).send("Server error");
-    }
-  }
 
   static async isLoggedIn(req, res) {
     return res.status(200).json({ msg: "User is logged in" });
