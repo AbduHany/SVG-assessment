@@ -17,10 +17,6 @@ const ProtectedRoute = () => {
     return <Navigate to="/login" replace />;
   }
 
-  if (status === "loading") {
-    return null;
-  }
-
   return <Outlet />;
 };
 
