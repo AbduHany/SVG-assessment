@@ -1,5 +1,6 @@
 import {
   Button,
+  Card,
   Form,
   InputNumber,
   Modal,
@@ -279,6 +280,15 @@ const OrdersPage = () => {
     [clients]
   );
 
+  if (!canView) {
+    return (
+      <Card className="text-center p-12">
+        <Title level={4}>Access Denied</Title>
+        <Text>You do not have permission to view orders.</Text>
+      </Card>
+    );
+  }
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -293,19 +303,13 @@ const OrdersPage = () => {
         </Button>
       </div>
 
-      {canView ? (
-        <Table
-          dataSource={orders}
-          columns={columns}
-          rowKey="id"
-          loading={status === "loading"}
-          className="card-shadow bg-white rounded-lg overflow-hidden"
-        />
-      ) : (
-        <Typography.Text type="warning">
-          You don't have permission to view products
-        </Typography.Text>
-      )}
+      <Table
+        dataSource={orders}
+        columns={columns}
+        rowKey="id"
+        loading={status === "loading"}
+        className="card-shadow bg-white rounded-lg overflow-hidden"
+      />
 
       <Modal
         title={editingOrder ? "Edit Order" : "Place New Order"}

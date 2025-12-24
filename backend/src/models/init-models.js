@@ -45,10 +45,6 @@ function initModels(sequelize) {
     foreignKey: "orderId",
     as: "payments",
   });
-  order.hasMany(comment, {
-    foreignKey: "orderId",
-    as: "comments",
-  });
 
   orderItem.belongsTo(order, {
     foreignKey: "orderId",
@@ -64,10 +60,6 @@ function initModels(sequelize) {
     as: "order",
   });
 
-  comment.belongsTo(order, {
-    foreignKey: "orderId",
-    as: "order",
-  });
   comment.belongsTo(user, {
     foreignKey: "userId",
     as: "user",

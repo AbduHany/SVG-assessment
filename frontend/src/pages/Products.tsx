@@ -1,5 +1,6 @@
 import {
   Button,
+  Card,
   Form,
   Input,
   InputNumber,
@@ -22,7 +23,7 @@ import type { ProductInput, Product } from "../store/productSlice";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { resolvePermissions } from "../utils/permissionChecker";
 
-const { Title } = Typography;
+const { Title, Text } = Typography;
 
 const ProductsPage = () => {
   const dispatch = useAppDispatch();
@@ -129,6 +130,15 @@ const ProductsPage = () => {
     [canDelete, canUpdate]
   );
 
+  if (!canView) {
+    return (
+      <Card className="text-center p-12">
+        <Title level={4}>Access Denied</Title>
+        <Text>You do not have permission to view products.</Text>
+      </Card>
+    );
+  }
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -143,19 +153,13 @@ const ProductsPage = () => {
         </Button>
       </div>
 
-      {canView ? (
-        <Table
-          dataSource={products}
-          columns={columns}
-          rowKey="id"
-          loading={status === "loading"}
-          className="card-shadow bg-white rounded-lg overflow-hidden"
-        />
-      ) : (
-        <Typography.Text type="warning">
-          You don't have permission to view products
-        </Typography.Text>
-      )}
+      <Table
+        dataSource={products}
+        columns={columns}
+        rowKey="id"
+        loading={status === "loading"}
+        className="card-shadow bg-white rounded-lg overflow-hidden"
+      />
 
       <Modal
         title={editingProduct ? "Edit Product" : "Add Product"}
