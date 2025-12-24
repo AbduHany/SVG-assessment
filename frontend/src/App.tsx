@@ -6,8 +6,20 @@ import Orders from "./pages/Orders";
 import Comments from "./pages/Comments";
 import ProtectedRoute from "./pages/ProtectedRoute";
 import AppLayout from "./pages/AppLayout";
+import { useAppDispatch, useAppSelector } from "./store/hooks";
+import { useEffect } from "react";
+import { checkAuth } from "./store/authSlice";
 
 function App() {
+  const dispatch = useAppDispatch();
+  const token = useAppSelector((state) => state.auth.token);
+
+  useEffect(() => {
+    if (token) {
+      dispatch(checkAuth());
+    }
+  }, [dispatch, token]);
+
   return (
     <>
       <Routes>
