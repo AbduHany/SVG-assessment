@@ -28,8 +28,8 @@ const Comments = () => {
   const dispatch = useAppDispatch();
 
   const comments = useAppSelector((state) => state.comments.items);
-  const commentStatus = useAppSelector((state) => state.comments.status);
-  const commentError = useAppSelector((state) => state.comments.error);
+  const status = useAppSelector((state) => state.comments.status);
+  const error = useAppSelector((state) => state.comments.error);
   const user = useAppSelector((state) => state.auth.user);
   const permissions = useAppSelector((state) => state.auth.user?.permissions);
   const isAdmin = useAppSelector((state) => state.auth.user?.isAdmin);
@@ -41,13 +41,13 @@ const Comments = () => {
   );
 
   useEffect(() => {
-    if (canView) {
+    if (status === "idle" && comments.length === 0) {
       dispatch(fetchComments());
     }
   }, []);
 
   const handleSubmit = async () => {
-    if (!newComment.trim() || !canCreate || commentStatus === "loading") {
+    if (!newComment.trim() || !canCreate || status === "loading") {
       return;
     }
 
@@ -62,7 +62,7 @@ const Comments = () => {
   };
 
   const handleDelete = async (id: string) => {
-    if (!canDelete || commentStatus === "loading") {
+    if (!canDelete || status === "loading") {
       return;
     }
 
@@ -99,16 +99,14 @@ const Comments = () => {
               value={newComment}
               onChange={(event) => setNewComment(event.target.value)}
               placeholder="Write a comment..."
-              disabled={!canCreate || commentStatus === "loading"}
+              disabled={!canCreate || status === "loading"}
             />
             <div className="flex justify-end">
               <Button
                 type="primary"
                 onClick={handleSubmit}
                 disabled={
-                  !newComment.trim() ||
-                  !canCreate ||
-                  commentStatus === "loading"
+                  !newComment.trim() || !canCreate || status === "loading"
                 }
               >
                 Post Comment
@@ -118,15 +116,15 @@ const Comments = () => {
         </div>
       </Card>
 
-      {commentStatus === "loading" && comments.length === 0 ? (
+      {status === "loading" && comments.length === 0 ? (
         <Card className="card-shadow">
           <Skeleton active paragraph={{ rows: 3 }} />
         </Card>
       ) : null}
 
-      {commentError ? (
+      {error ? (
         <Card className="card-shadow">
-          <Text type="danger">{commentError}</Text>
+          <Text type="danger">{error}</Text>
         </Card>
       ) : null}
 
