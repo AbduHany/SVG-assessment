@@ -41,7 +41,7 @@ const ClientsPage = () => {
     if (status === "idle" && clients.length === 0) {
       dispatch(fetchClients());
     }
-  }, []);
+  }, [dispatch, clients.length]);
 
   const handleAdd = () => {
     setEditingClient(null);

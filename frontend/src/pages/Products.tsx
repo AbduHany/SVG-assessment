@@ -42,7 +42,7 @@ const ProductsPage = () => {
     if (status === "idle" && products.length === 0) {
       dispatch(fetchProducts());
     }
-  }, []);
+  }, [dispatch, products]);
 
   const handleAdd = () => {
     setEditingProduct(null);

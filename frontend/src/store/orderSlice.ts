@@ -5,10 +5,19 @@ export interface OrderItem {
   productId: string;
   quantity: number;
   price: number;
+  subtotal?: number;
   product?: {
     name?: string;
   };
   productName?: string;
+}
+export interface Payment {
+  id?: string;
+  paymentMethod: "cash" | "card";
+  amount: number;
+  transactionId?: string | null;
+  status?: "pending" | "completed" | "failed" | "refunded";
+  paymentDate?: string;
 }
 
 export interface Order {
@@ -23,6 +32,7 @@ export interface Order {
     name?: string;
   };
   items?: OrderItem[];
+  payments?: Payment[];
 }
 
 export type OrderInput = Omit<Order, "id"> & {
