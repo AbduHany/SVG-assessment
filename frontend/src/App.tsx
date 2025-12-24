@@ -1,18 +1,28 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
+import Login from "./pages/Login";
+import Products from "./pages/Products";
+import Clients from "./pages/Clients";
+import Orders from "./pages/Orders";
+import Comments from "./pages/Comments";
+import ProtectedRoute from "./pages/ProtectedRoute";
+import AppLayout from "./pages/AppLayout";
 
 function App() {
   return (
     <>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<div>Login</div>} />
-          <Route path="/dashboard" element={<div>Dashboard</div>} />
-          <Route path="/products" element={<div>Products</div>} />
-          <Route path="/clients" element={<div>Clients</div>} />
-          <Route path="/orders" element={<div>Orders</div>} />
-          <Route path="/comments" element={<div>Comments</div>} />
-        </Routes>
-      </BrowserRouter>
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route element={<ProtectedRoute />}>
+          <Route element={<AppLayout />}>
+            <Route path="/" element={<Navigate to="/products" replace />} />
+            <Route path="/products" element={<Products />} />
+            <Route path="/clients" element={<Clients />} />
+            <Route path="/orders" element={<Orders />} />
+            <Route path="/comments" element={<Comments />} />
+          </Route>
+        </Route>
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
     </>
   );
 }
