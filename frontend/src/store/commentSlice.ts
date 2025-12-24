@@ -1,46 +1,95 @@
-import { createSlice, nanoid } from "@reduxjs/toolkit";
-import type { PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import api from "../api/axiosClient";
 
 export interface Comment {
   id: string;
-  authorId: string;
-  authorName: string;
+  userId: string;
   content: string;
   createdAt: string;
+  user?: {
+    id: string;
+    name: string;
+  };
 }
 
 interface CommentsState {
-  comments: Comment[];
+  items: Comment[];
+  status: "idle" | "loading" | "failed";
+  error: string | null;
 }
 
 const initialState: CommentsState = {
-  comments: [],
+  items: [],
+  status: "idle",
+  error: null,
 };
+
+export const fetchComments = createAsyncThunk("comments/fetchAll", async () => {
+  const response = await api.get<Comment[]>("/comments");
+  return response.data;
+});
+
+export const createComment = createAsyncThunk(
+  "comments/create",
+  async ({ content }: { content: string }) => {
+    const response = await api.post<Comment>("/comments", { content });
+    return response.data;
+  }
+);
+
+export const deleteComment = createAsyncThunk(
+  "comments/delete",
+  async (id: string) => {
+    await api.delete(`/comments/${id}`);
+    return id;
+  }
+);
 
 const commentsSlice = createSlice({
   name: "comments",
   initialState,
-  reducers: {
-    addComment: {
-      reducer: (state, action: PayloadAction<Comment>) => {
-        state.comments = [action.payload, ...state.comments];
-      },
-      prepare: (payload: Omit<Comment, "id" | "createdAt">) => ({
-        payload: {
-          id: nanoid(),
-          createdAt: new Date().toISOString(),
-          ...payload,
-        },
-      }),
-    },
-    deleteComment: (state, action: PayloadAction<string>) => {
-      state.comments = state.comments.filter(
-        (comment) => comment.id !== action.payload
-      );
-    },
+  reducers: {},
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchComments.pending, (state) => {
+        state.status = "loading";
+        state.error = null;
+      })
+      .addCase(fetchComments.fulfilled, (state, action) => {
+        state.status = "idle";
+        state.items = action.payload;
+      })
+      .addCase(fetchComments.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message ?? "Failed to load comments";
+      })
+      .addCase(createComment.pending, (state) => {
+        state.status = "loading";
+        state.error = null;
+      })
+      .addCase(createComment.fulfilled, (state, action) => {
+        state.status = "idle";
+        state.items = [action.payload, ...state.items];
+      })
+      .addCase(createComment.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message ?? "Failed to create comment";
+      })
+      .addCase(deleteComment.pending, (state) => {
+        state.status = "loading";
+        state.error = null;
+      })
+      .addCase(deleteComment.fulfilled, (state, action) => {
+        state.status = "idle";
+        state.items = state.items.filter(
+          (comment) => comment.id !== action.payload
+        );
+      })
+      .addCase(deleteComment.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message ?? "Failed to delete comment";
+      });
   },
 });
-
-export const { addComment, deleteComment } = commentsSlice.actions;
 
 export default commentsSlice.reducer;

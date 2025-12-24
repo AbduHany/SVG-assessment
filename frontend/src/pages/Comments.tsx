@@ -6,12 +6,17 @@ import {
   Input,
   List,
   Popconfirm,
+  Skeleton,
   Typography,
   message,
 } from "antd";
 import type { Comment } from "../store/commentSlice";
-import { addComment, deleteComment } from "../store/commentSlice";
-import { useState } from "react";
+import {
+  createComment,
+  deleteComment,
+  fetchComments,
+} from "../store/commentSlice";
+import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { resolvePermissions } from "../utils/permissionChecker";
 
@@ -22,7 +27,9 @@ const Comments = () => {
   const [newComment, setNewComment] = useState("");
   const dispatch = useAppDispatch();
 
-  const comments = useAppSelector((state) => state.comments.comments);
+  const comments = useAppSelector((state) => state.comments.items);
+  const commentStatus = useAppSelector((state) => state.comments.status);
+  const commentError = useAppSelector((state) => state.comments.error);
   const user = useAppSelector((state) => state.auth.user);
   const permissions = useAppSelector((state) => state.auth.user?.permissions);
   const isAdmin = useAppSelector((state) => state.auth.user?.isAdmin);
@@ -33,28 +40,39 @@ const Comments = () => {
     isAdmin
   );
 
-  const handleSubmit = () => {
-    if (!newComment.trim() || !canCreate) {
+  useEffect(() => {
+    if (canView) {
+      dispatch(fetchComments());
+    }
+  }, [canView, dispatch]);
+
+  const handleSubmit = async () => {
+    if (!newComment.trim() || !canCreate || commentStatus === "loading") {
       return;
     }
 
-    dispatch(
-      addComment({
-        authorId: user?.id ?? "unknown",
-        authorName: user?.name ?? "Unknown",
-        content: newComment.trim(),
-      })
-    );
-    setNewComment("");
-    message.success("Comment posted");
+    try {
+      await dispatch(createComment({ content: newComment.trim() })).unwrap();
+      setNewComment("");
+      message.success("Comment posted");
+    } catch (error) {
+      console.error(error);
+      message.error("Failed to post comment");
+    }
   };
 
-  const handleDelete = (id: string) => {
-    if (!canDelete) {
+  const handleDelete = async (id: string) => {
+    if (!canDelete || commentStatus === "loading") {
       return;
     }
-    dispatch(deleteComment(id));
-    message.success("Comment deleted");
+
+    try {
+      await dispatch(deleteComment(id)).unwrap();
+      message.success("Comment deleted");
+    } catch (error) {
+      console.error(error);
+      message.error("Failed to delete comment");
+    }
   };
 
   const userInitial = (user?.name?.[0] ?? "?").toUpperCase();
@@ -81,12 +99,17 @@ const Comments = () => {
               value={newComment}
               onChange={(event) => setNewComment(event.target.value)}
               placeholder="Write a comment..."
+              disabled={!canCreate || commentStatus === "loading"}
             />
             <div className="flex justify-end">
               <Button
                 type="primary"
                 onClick={handleSubmit}
-                disabled={!newComment.trim() || !canCreate}
+                disabled={
+                  !newComment.trim() ||
+                  !canCreate ||
+                  commentStatus === "loading"
+                }
               >
                 Post Comment
               </Button>
@@ -95,48 +118,69 @@ const Comments = () => {
         </div>
       </Card>
 
+      {commentStatus === "loading" && comments.length === 0 ? (
+        <Card className="card-shadow">
+          <Skeleton active paragraph={{ rows: 3 }} />
+        </Card>
+      ) : null}
+
+      {commentError ? (
+        <Card className="card-shadow">
+          <Text type="danger">{commentError}</Text>
+        </Card>
+      ) : null}
+
       <List
         className="bg-white rounded-lg shadow-sm p-4"
         itemLayout="horizontal"
         dataSource={comments}
         locale={{ emptyText: "No comments yet" }}
-        renderItem={(item: Comment) => (
-          <List.Item
-            actions={
-              canDelete
-                ? [
-                    <Popconfirm
-                      key="delete"
-                      title="Delete comment?"
-                      onConfirm={() => handleDelete(item.id)}
-                    >
-                      <Button type="text" danger icon={<DeleteOutlined />} />
-                    </Popconfirm>,
-                  ]
-                : []
-            }
-          >
-            <List.Item.Meta
-              avatar={
-                <Avatar className="bg-gray-200 text-gray-600">
-                  {(item.authorName?.[0] ?? "?").toUpperCase()}
-                </Avatar>
+        renderItem={(item: Comment) => {
+          const displayName =
+            item.user?.name ??
+            (item.userId === user?.id ? user?.name : undefined) ??
+            "Unknown";
+
+          return (
+            <List.Item
+              actions={
+                canDelete
+                  ? [
+                      <Popconfirm
+                        key="delete"
+                        title="Delete comment?"
+                        onConfirm={() => handleDelete(item.id)}
+                      >
+                        <Button type="text" danger icon={<DeleteOutlined />} />
+                      </Popconfirm>,
+                    ]
+                  : []
               }
-              title={
-                <div className="flex justify-between items-center">
-                  <span>{item.authorName}</span>
-                  <Text type="secondary" className="text-xs">
-                    {new Date(item.createdAt).toLocaleString()}
-                  </Text>
-                </div>
-              }
-              description={
-                <Text className="text-gray-800">{item.content}</Text>
-              }
-              className="p-4"
-            />
-          </List.Item>
-        )}
+            >
+              <List.Item.Meta
+                avatar={
+                  <Avatar className="bg-gray-200 text-gray-600">
+                    {(displayName?.[0] ?? "?").toUpperCase()}
+                  </Avatar>
+                }
+                title={
+                  <div className="flex justify-between items-center">
+                    <span>{displayName}</span>
+                    <Text type="secondary" className="text-xs">
+                      {item.createdAt
+                        ? new Date(item.createdAt).toLocaleString()
+                        : "Unknown date"}
+                    </Text>
+                  </div>
+                }
+                description={
+                  <Text className="text-gray-800">{item.content}</Text>
+                }
+                className="p-4"
+              />
+            </List.Item>
+          );
+        }}
       />
     </div>
   );
