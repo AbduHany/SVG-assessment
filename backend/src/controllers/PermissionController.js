@@ -1,7 +1,7 @@
 const { where } = require("sequelize");
 const dbClient = require("../utils/db");
-const User = require("../models/User");
 const Permission = dbClient.models.permission;
+const User = dbClient.models.user;
 
 class PermissionController {
   static async getAll(req, res) {
