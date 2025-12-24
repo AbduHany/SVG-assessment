@@ -21,11 +21,11 @@ module.exports = (sequelize, DataTypes) => {
       },
       phone: {
         type: DataTypes.STRING,
-        allowNull: true,
+        allowNull: false,
       },
       address: {
         type: DataTypes.TEXT,
-        allowNull: true,
+        allowNull: false,
       },
     },
     {

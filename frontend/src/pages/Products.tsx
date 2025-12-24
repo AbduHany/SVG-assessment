@@ -20,41 +20,9 @@ import {
 } from "../store/productSlice";
 import type { ProductInput, Product } from "../store/productSlice";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
+import { resolvePermissions } from "../utils/permissionChecker";
 
 const { Title } = Typography;
-
-export type Permission = {
-  id: string;
-  resource: string;
-  canView: boolean;
-  canCreate: boolean;
-  canUpdate: boolean;
-  canDelete: boolean;
-};
-
-export const resolvePermissions = (
-  permissions: Permission[] | null,
-  resource: string,
-  isAdmin?: boolean
-) => {
-  if (isAdmin) {
-    return {
-      canView: true,
-      canCreate: true,
-      canUpdate: true,
-      canDelete: true,
-    };
-  }
-
-  const permission = permissions?.find((p) => p.resource === resource);
-
-  return {
-    canView: Boolean(permission?.canView),
-    canCreate: Boolean(permission?.canCreate),
-    canUpdate: Boolean(permission?.canUpdate),
-    canDelete: Boolean(permission?.canDelete),
-  };
-};
 
 const ProductsPage = () => {
   const dispatch = useAppDispatch();
@@ -74,7 +42,7 @@ const ProductsPage = () => {
     if (status === "idle" && products.length === 0) {
       dispatch(fetchProducts());
     }
-  }, [products]);
+  }, []);
 
   const handleAdd = () => {
     setEditingProduct(null);

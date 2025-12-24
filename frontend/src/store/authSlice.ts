@@ -85,9 +85,9 @@ const authSlice = createSlice({
         state.token = action.payload;
         localStorage.setItem("authToken", action.payload);
       })
-      .addCase(login.rejected, (state, action) => {
+      .addCase(login.rejected, (state) => {
         state.status = "failed";
-        state.error = action.error.message ?? "Login failed";
+        state.error = "Incorrect email or password";
       })
       .addCase(checkAuth.pending, (state) => {
         state.status = "loading";
@@ -97,9 +97,9 @@ const authSlice = createSlice({
         state.status = "idle";
         state.user = action.payload;
       })
-      .addCase(checkAuth.rejected, (state, action) => {
+      .addCase(checkAuth.rejected, (state) => {
         state.status = "failed";
-        state.error = action.error.message ?? "Auth check failed";
+        state.error = "Auth check failed";
         state.token = null;
         state.user = null;
         localStorage.removeItem("authToken");
