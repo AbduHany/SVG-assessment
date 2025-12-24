@@ -28,7 +28,7 @@ frontend/  # React + Vite + TypeScript UI
 
    ```env
    # Optional (defaults shown)
-   DATABASE=postgres
+   DATABASE_NAME=postgres
    DATABASE_USER=postgres
    DATABASE_PASS=
    DATABASE_HOST=localhost
@@ -72,7 +72,7 @@ The script reads admin credentials from environment variables, falling back to s
 - `ADMIN_EMAIL` (default: `admin@example.com`)
 - `ADMIN_PASSWORD` (default: `admin123`)
 
-Make sure your database connection environment variables (`DATABASE`, `DATABASE_USER`, `DATABASE_PASS`, `DATABASE_HOST`, `DATABASE_PORT`) are configured as needed for your environment.
+Make sure your database connection environment variables (`DATABASE_NAME`, `DATABASE_USER`, `DATABASE_PASS`, `DATABASE_HOST`, `DATABASE_PORT`) are configured as needed for your environment.
 
 ## Frontend Setup (Web)
 
