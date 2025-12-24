@@ -44,7 +44,7 @@ const Comments = () => {
     if (canView) {
       dispatch(fetchComments());
     }
-  }, [canView, dispatch]);
+  }, []);
 
   const handleSubmit = async () => {
     if (!newComment.trim() || !canCreate || commentStatus === "loading") {

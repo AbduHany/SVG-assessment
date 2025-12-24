@@ -18,7 +18,7 @@ const ProtectedRoute = () => {
       hasCheckedAuth.current = true;
       dispatch(checkAuth());
     }
-  }, [dispatch, status, token]);
+  }, []);
 
   if (!token) {
     return <Navigate to="/login" replace />;

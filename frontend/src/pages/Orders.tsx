@@ -58,7 +58,7 @@ const OrdersPage = () => {
     if (status === "idle" && orders.length === 0) {
       dispatch(fetchOrders());
     }
-  }, [dispatch, orders.length]);
+  }, []);
 
   useEffect(() => {
     if (clients.length === 0) {
@@ -67,7 +67,7 @@ const OrdersPage = () => {
     if (products.length === 0) {
       dispatch(fetchProducts());
     }
-  }, [dispatch, clients.length, products.length]);
+  }, []);
 
   const paymentStatusFallback = (status: Order["status"]) =>
     status === "completed" ? "completed" : "pending";
