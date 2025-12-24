@@ -3,8 +3,18 @@ const bcrypt = require("bcryptjs");
 const dbClient = require("../utils/db");
 
 const User = dbClient.models.user;
+const Permission = dbClient.models.permission;
 
 class UserController {
+  static async getProfile(req, res) {
+    try {
+      res.json(req.user);
+    } catch (err) {
+      console.error(err);
+      return res.status(500).json({ message: "Server error" });
+    }
+  }
+
   static async getAll(req, res) {
     try {
       const users = await User.findAll({

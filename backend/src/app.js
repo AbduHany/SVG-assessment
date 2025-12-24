@@ -10,6 +10,8 @@ const productRouter = require("./routers/ProductRouter");
 const permissionRouter = require("./routers/PermissionRouter");
 const orderRouter = require("./routers/OrderRouter");
 const commentRouter = require("./routers/CommentRouter");
+const authenticate = require("./middlewares/AuthMiddleware");
+const UserController = require("./controllers/UserController");
 
 async function createServer() {
   const app = express();
@@ -37,6 +39,8 @@ async function createServer() {
   app.get("/", (req, res) => {
     res.send("Server is running");
   });
+
+  app.get("/profile", authenticate, UserController.getProfile);
 
   return app;
 }
