@@ -1,10 +1,9 @@
 const { Sequelize } = require("sequelize");
 const initModels = require("../models/init-models");
-
 class DbClient {
   constructor() {
     this.sequelize = new Sequelize(
-      process.env.DATABASE || "postgres",
+      process.env.DATABASE_NAME || "postgres",
       process.env.DATABASE_USER || "postgres",
       process.env.DATABASE_PASS || "",
       {
@@ -16,7 +15,6 @@ class DbClient {
     );
     // Models object
     this.models = initModels(this.sequelize);
-    this.sequelize.sync({ alter: true });
   }
 
   async isAlive() {

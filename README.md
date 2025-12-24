@@ -56,6 +56,24 @@ The API registers these route groups:
 - `/orders/*`
 - `/comments/*`
 
+### Admin seeding
+
+Use the following command to create or update an admin user. The script will look up the user by email; if found, it ensures `isAdmin` is set to `true`. If not found, it creates a new admin user with a hashed password.
+
+```bash
+npm run seed-admin
+```
+
+#### Environment variables
+
+The script reads admin credentials from environment variables, falling back to safe local defaults:
+
+- `ADMIN_NAME` (default: `Admin User`)
+- `ADMIN_EMAIL` (default: `admin@example.com`)
+- `ADMIN_PASSWORD` (default: `admin123`)
+
+Make sure your database connection environment variables (`DATABASE`, `DATABASE_USER`, `DATABASE_PASS`, `DATABASE_HOST`, `DATABASE_PORT`) are configured as needed for your environment.
+
 ## Frontend Setup (Web)
 
 1. Install dependencies:
