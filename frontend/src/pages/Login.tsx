@@ -14,7 +14,7 @@ const LoginPage = () => {
       dispatch(checkAuth());
       navigate("/products", { replace: true });
     }
-  }, []);
+  }, [token]);
 
   const handleFinish = (values: { email: string; password: string }) => {
     dispatch(login(values));
