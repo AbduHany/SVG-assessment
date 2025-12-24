@@ -100,6 +100,9 @@ const authSlice = createSlice({
       .addCase(checkAuth.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message ?? "Auth check failed";
+        state.token = null;
+        state.user = null;
+        localStorage.removeItem("authToken");
       });
   },
 });
